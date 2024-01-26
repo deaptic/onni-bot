@@ -2,7 +2,7 @@ import { Client, GatewayIntentBits } from "discord.js";
 import { EventManager } from "@managers/EventManager.ts";
 import { InteractionManager } from "@managers/InteractionManager.ts";
 
-export class Nite extends Client {
+export class Onni extends Client {
   public readonly events = new EventManager(this);
   public readonly interactions = new InteractionManager(this);
 

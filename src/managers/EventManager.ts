@@ -1,10 +1,10 @@
 import { Collection } from "discord.js";
 import { BaseEvent, DiscordEvent } from "@modules/events/DiscordEvent.ts";
 import * as events from "@modules/events/index.ts";
-import { Nite } from "@/Client.ts";
+import { Onni } from "@/Client.ts";
 
 export class EventManager extends Collection<string, DiscordEvent<BaseEvent>> {
-  constructor(private readonly client: Nite) {
+  constructor(private readonly client: Onni) {
     super();
     this.collect().deploy([...this.values()]);
   }
