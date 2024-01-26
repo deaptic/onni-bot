@@ -1,5 +1,6 @@
 import { OpenAI } from "openai";
 import { getOpenAiApiToken } from "@constants/environments.ts";
+import { MessageContentText } from "openai/resources";
 
 export class AIService {
   private static instance: AIService | undefined;
@@ -20,14 +21,6 @@ export class AIService {
   }
 
   private store = new Map<string, OpenAI.Beta.Threads.Thread>();
-
-  private async replyToMessage(threadId: string, body: OpenAI.Beta.Threads.Runs.RunCreateParams) {
-    const thread = await this.provider.beta.threads.runs.create(
-      threadId,
-      body,
-    );
-    return thread;
-  }
 
   public async conversation(customId: string, message: OpenAI.Beta.Threads.Messages.MessageCreateParams) {
     if (!this.store.has(customId)) {
@@ -64,7 +57,7 @@ export class AIService {
       .filter((message) => message.run_id === run.id)
       .pop();
 
-    return response?.content[0].text.value;
+    return (response?.content[0] as MessageContentText).text.value;
   }
 }
 
