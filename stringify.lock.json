@@ -1,0 +1,17 @@
+{
+  "projects": [
+    {
+      "projectId": "392",
+      "localizations": [
+        {
+          "locale": "en",
+          "version": 41
+        },
+        {
+          "locale": "fi",
+          "version": 56
+        }
+      ]
+    }
+  ]
+}

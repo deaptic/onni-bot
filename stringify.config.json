@@ -1,0 +1,19 @@
+{
+  "format": "json",
+  "projects": [
+    {
+      "id": "392",
+      "name": "Nite",
+      "localizations": [
+        {
+          "locale": "en",
+          "path": "src/locales/en.json"
+        },
+        {
+          "locale": "fi",
+          "path": "src/locales/fi.json"
+        }
+      ]
+    }
+  ]
+}
