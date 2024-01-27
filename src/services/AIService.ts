@@ -70,8 +70,8 @@ export class AIService {
       Logger.warn(`OpenAI API usage exceeded 1000 tokens.`, runStatus.usage);
       const threadId = this.store.get(customId)?.id;
       if (threadId) {
-        await this.provider.beta.threads.del(threadId);
         this.store.delete(customId);
+        await this.provider.beta.threads.del(threadId);
       }
     }
 
