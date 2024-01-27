@@ -1,9 +1,9 @@
 FROM denoland/deno:1.40.2
 
-WORKDIR /app
+WORKDIR /
 
 COPY . .
 
-RUN deno cache app/main.ts
+RUN deno cache main.ts
 
-CMD [ "run", "--allow-net", "--allow-read", "--allow-env", "/app/main.ts"]
+CMD [ "run", "--allow-net", "--allow-read", "--allow-env", "main.ts"]
