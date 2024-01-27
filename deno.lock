@@ -3,7 +3,6 @@
   "packages": {
     "specifiers": {
       "npm:discord.js@14.14.1": "npm:discord.js@14.14.1",
-      "npm:i18n@0.15.1": "npm:i18n@0.15.1",
       "npm:ioredis@5.3.2": "npm:ioredis@5.3.2",
       "npm:openai@4.25.0": "npm:openai@4.25.0"
     },
@@ -74,37 +73,6 @@
         "integrity": "sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==",
         "dependencies": {}
       },
-      "@messageformat/core@3.3.0": {
-        "integrity": "sha512-YcXd3remTDdeMxAlbvW6oV9d/01/DZ8DHUFwSttO3LMzIZj3iO0NRw+u1xlsNNORFI+u0EQzD52ZX3+Udi0T3g==",
-        "dependencies": {
-          "@messageformat/date-skeleton": "@messageformat/date-skeleton@1.0.1",
-          "@messageformat/number-skeleton": "@messageformat/number-skeleton@1.2.0",
-          "@messageformat/parser": "@messageformat/parser@5.1.0",
-          "@messageformat/runtime": "@messageformat/runtime@3.0.1",
-          "make-plural": "make-plural@7.3.0",
-          "safe-identifier": "safe-identifier@0.4.2"
-        }
-      },
-      "@messageformat/date-skeleton@1.0.1": {
-        "integrity": "sha512-jPXy8fg+WMPIgmGjxSlnGJn68h/2InfT0TNSkVx0IGXgp4ynnvYkbZ51dGWmGySEK+pBiYUttbQdu5XEqX5CRg==",
-        "dependencies": {}
-      },
-      "@messageformat/number-skeleton@1.2.0": {
-        "integrity": "sha512-xsgwcL7J7WhlHJ3RNbaVgssaIwcEyFkBqxHdcdaiJzwTZAWEOD8BuUFxnxV9k5S0qHN3v/KzUpq0IUpjH1seRg==",
-        "dependencies": {}
-      },
-      "@messageformat/parser@5.1.0": {
-        "integrity": "sha512-jKlkls3Gewgw6qMjKZ9SFfHUpdzEVdovKFtW1qRhJ3WI4FW5R/NnGDqr8SDGz+krWDO3ki94boMmQvGke1HwUQ==",
-        "dependencies": {
-          "moo": "moo@0.5.2"
-        }
-      },
-      "@messageformat/runtime@3.0.1": {
-        "integrity": "sha512-6RU5ol2lDtO8bD9Yxe6CZkl0DArdv0qkuoZC+ZwowU+cdRlVE1157wjCmlA5Rsf1Xc/brACnsZa5PZpEDfTFFg==",
-        "dependencies": {
-          "make-plural": "make-plural@7.3.0"
-        }
-      },
       "@sapphire/async-queue@1.5.2": {
         "integrity": "sha512-7X7FFAA4DngXUl95+hYbUF19bp1LGiffjJtu7ygrZrbdCSsdDDBaSjB7Akw0ZbOu6k0xpXyljnJ6/RZUvLfRdg==",
         "dependencies": {}
@@ -159,10 +127,6 @@
       },
       "base-64@0.1.0": {
         "integrity": "sha512-Y5gU45svrR5tI2Vt/X9GPd3L0HNIKzGu202EjxrXMpuc2V2CiKgemAbUUsqYmZJvPtCXoUKjNZwBJzsNScUbXA==",
-        "dependencies": {}
-      },
-      "boolean@3.2.0": {
-        "integrity": "sha512-d0II/GO9uf9lfUHH2BQsjxzRJZBdsjgsBiW4BvhWk/3qoKwQFjIDVN19PfX8F2D/r9PCMTtLWjYVCFrpeYUzsw==",
         "dependencies": {}
       },
       "charenc@0.0.2": {
@@ -235,12 +199,6 @@
         "integrity": "sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==",
         "dependencies": {}
       },
-      "fast-printf@1.6.9": {
-        "integrity": "sha512-FChq8hbz65WMj4rstcQsFB0O7Cy++nmbNfLYnD9cYv2cRn8EG6k/MGn9kO/tjO66t09DLDugj3yL+V2o6Qftrg==",
-        "dependencies": {
-          "boolean": "boolean@3.2.0"
-        }
-      },
       "form-data-encoder@1.7.2": {
         "integrity": "sha512-qfqtYan3rxrnCk1VYaA4H+Ms9xdpPqvLZa6xmMgFvhO32x7/3J/ExcTd6qpxM0vH2GdMI+poehyBZvqfMTto8A==",
         "dependencies": {}
@@ -264,17 +222,6 @@
         "integrity": "sha512-Fl70vYtsAFb/C06PTS9dZBo7ihau+Tu/DNCk/OyHhea07S+aeMWpFFkUaXRa8fI+ScZbEI8dfSxwY7gxZ9SAVQ==",
         "dependencies": {
           "ms": "ms@2.1.2"
-        }
-      },
-      "i18n@0.15.1": {
-        "integrity": "sha512-yue187t8MqUPMHdKjiZGrX+L+xcUsDClGO0Cz4loaKUOK9WrGw5pgan4bv130utOwX7fHE9w2iUeHFalVQWkXA==",
-        "dependencies": {
-          "@messageformat/core": "@messageformat/core@3.3.0",
-          "debug": "debug@4.3.4",
-          "fast-printf": "fast-printf@1.6.9",
-          "make-plural": "make-plural@7.3.0",
-          "math-interval-parser": "math-interval-parser@2.0.1",
-          "mustache": "mustache@4.2.0"
         }
       },
       "ioredis@5.3.2": {
@@ -315,14 +262,6 @@
         "integrity": "sha512-lyWpfvNGVb5lu8YUAbER0+UMBTdR63w2mcSUlhhBTyVbxJvjgqwyAf3AZD6MprgK0uHuBoWXSDAMWLupX83o3Q==",
         "dependencies": {}
       },
-      "make-plural@7.3.0": {
-        "integrity": "sha512-/K3BC0KIsO+WK2i94LkMPv3wslMrazrQhfi5We9fMbLlLjzoOSJWr7TAdupLlDWaJcWxwoNosBkhFDejiu5VDw==",
-        "dependencies": {}
-      },
-      "math-interval-parser@2.0.1": {
-        "integrity": "sha512-VmlAmb0UJwlvMyx8iPhXUDnVW1F9IrGEd9CIOmv+XL8AErCUUuozoDMrgImvnYt2A+53qVX/tPW6YJurMKYsvA==",
-        "dependencies": {}
-      },
       "md5@2.3.0": {
         "integrity": "sha512-T1GITYmFaKuO91vxyoQMFETst+O71VUPEU3ze5GNzDm0OWdP8v1ziTaAEPUr/3kLsY3Sftgz242A1SetQiDL7g==",
         "dependencies": {
@@ -341,16 +280,8 @@
           "mime-db": "mime-db@1.52.0"
         }
       },
-      "moo@0.5.2": {
-        "integrity": "sha512-iSAJLHYKnX41mKcJKjqvnAN9sf0LMDTXDEvFv+ffuRR9a1MIuXLjMNL6EsnDHSkKLTWNqQQ5uo61P4EbU4NU+Q==",
-        "dependencies": {}
-      },
       "ms@2.1.2": {
         "integrity": "sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==",
-        "dependencies": {}
-      },
-      "mustache@4.2.0": {
-        "integrity": "sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==",
         "dependencies": {}
       },
       "node-domexception@1.0.0": {
@@ -386,10 +317,6 @@
         "dependencies": {
           "redis-errors": "redis-errors@1.2.0"
         }
-      },
-      "safe-identifier@0.4.2": {
-        "integrity": "sha512-6pNbSMW6OhAi9j+N8V+U715yBQsaWJ7eyEUaOrawX+isg5ZxhUlV1NipNtgaKHmFGiABwt+ZF04Ii+3Xjkg+8w==",
-        "dependencies": {}
       },
       "standard-as-callback@2.1.0": {
         "integrity": "sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==",
@@ -535,10 +462,8 @@
   "workspace": {
     "dependencies": [
       "npm:discord.js@14.14.1",
-      "npm:i18n@0.15.1",
       "npm:ioredis@5.3.2",
-      "npm:openai@4.25.0",
-      "npm:stringify-cli@1.0.4"
+      "npm:openai@4.25.0"
     ]
   }
 }
