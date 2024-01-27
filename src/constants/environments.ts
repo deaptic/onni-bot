@@ -1,11 +1,10 @@
 import "https://deno.land/std@0.213.0/dotenv/load.ts";
 
 import { Guard } from "@services/GuardService.ts";
-import { Locale } from "@services/LocaleService.ts";
 
 const getVariableByKey = (key: string) => {
   const value = Deno.env.get(key);
-  Guard.Against.Null(value, Locale.translate(`${key}_NOT_FOUND`));
+  Guard.Against.Null(value, `${key}_NOT_FOUND`);
   return value;
 };
 

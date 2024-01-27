@@ -2,7 +2,6 @@ import { Collection } from "discord.js";
 import { BaseInteraction, DiscordInteraction } from "@modules/interactions/DiscordInteraction.ts";
 import * as interactions from "@modules/interactions/index.ts";
 import { Onni } from "@/Client.ts";
-import { Locale } from "@services/LocaleService.ts";
 import { Logger } from "@services/LoggerService.ts";
 
 export class InteractionManager extends Collection<
@@ -14,14 +13,10 @@ export class InteractionManager extends Collection<
     this.collect()
       .deploy([...this.values()])
       .then(() => {
-        Logger.info(
-          Locale.translate("INTERACTION_DEPLOY_SUCCESS_COUNT", {
-            count: this.size,
-          }),
-        );
+        Logger.info(`Interactions deployed: ${this.size}`);
       })
       .catch((error) => {
-        Logger.error(Locale.translate("INTERACTION_DEPLOY_ERROR"), error);
+        Logger.error(error.message, error);
       });
   }
 

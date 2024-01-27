@@ -2,7 +2,6 @@ import { ChatInputCommandInteraction, CommandInteraction, Events, Interaction } 
 import { EventBuilder } from "@builders/EventBuilder.ts";
 import { DiscordEvent } from "@modules/events/DiscordEvent.ts";
 import { DiscordInteraction } from "@modules/interactions/DiscordInteraction.ts";
-import { Locale } from "@services/LocaleService.ts";
 import { Logger } from "@services/LoggerService.ts";
 
 export class InteractionCreateEvent extends DiscordEvent<Events.InteractionCreate> {
@@ -28,23 +27,16 @@ export class InteractionCreateEvent extends DiscordEvent<Events.InteractionCreat
       return this.handleChatInputCommandInteraction(interaction, module)
         .then(() => {
           Logger.log(
-            Locale.translate("INTERACTION_EXECUTE_SUCCESS_INTERACTION_USER", {
-              interaction: interaction.commandName,
-              user: `${interaction.user.tag} (${interaction.user.id})`,
-            }),
+            `Interaction ${interaction.commandName} executed by ${interaction.user.tag} (${interaction.user.id})`,
           );
         })
         .catch((error) => {
-          const newErrorMessage = Locale.translate(
-            "INTERACTION_HANDLE_ERROR_INTERACTION",
-            {
-              interaction: interaction.commandName,
-            },
-          );
+          const newErrorMessage =
+            `Error while trying to execute interaction ${interaction.commandName} by ${interaction.user.tag} (${interaction.user.id})`;
           Logger.error(error.message || newErrorMessage, error);
 
           interaction.reply({
-            content: Locale.translate("INTERACTION_EXECUTE_ERROR"),
+            content: `Error while trying to execute interaction ${interaction.commandName}`,
             ephemeral: true,
           });
         });
