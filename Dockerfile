@@ -1,5 +1,7 @@
 FROM denoland/deno:latest as base
 
+EXPOSE 80
+
 WORKDIR /app
 
 COPY . ./
