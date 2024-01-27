@@ -1,7 +1,7 @@
 {
   "fmt": {
     "lineWidth": 120,
-    "include": ["src/"]
+    "include": ["app/"]
   },
   "imports": {
     "dotenv": "https://deno.land/std@0.213.0/dotenv/mod.ts",
@@ -12,13 +12,13 @@
     "openai": "npm:openai@4.25.0",
     "openai/resources": "npm:openai@4.25.0/resources/index.ts",
 
-    "@/": "./src/",
-    "@builders/": "./src/builders/",
-    "@constants/": "./src/constants/",
-    "@managers/": "./src/managers/",
-    "@modules/": "./src/modules/",
-    "@services/": "./src/services/",
-    "@utilities/": "./src/utilities/"
+    "@/": "./app/",
+    "@builders/": "./app/builders/",
+    "@constants/": "./app/constants/",
+    "@managers/": "./app/managers/",
+    "@modules/": "./app/modules/",
+    "@services/": "./app/services/",
+    "@utilities/": "./app/utilities/"
   },
   "tasks": {
     "dev": "deno run -A --watch main.ts",
