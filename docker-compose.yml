@@ -3,9 +3,8 @@ version: "3.9"
 services:
   app:
     container_name: onni-bot
-    image: deno
+    image: onni-bot-image
     restart: always
     build:
       context: .
       dockerfile: Dockerfile
-      target: base
