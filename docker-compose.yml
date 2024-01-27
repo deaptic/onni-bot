@@ -1,9 +1,12 @@
-version: "3"
+version: "3.9"
 
 services:
   app:
-    build: .
     container_name: onni-bot
     image: deno-image
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
     ports:
-      - "8000:8000"
+      - "80:80"

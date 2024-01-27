@@ -1,8 +1,8 @@
-FROM denoland/deno:1.40.2
+FROM denoland/deno:latest as base
 
-WORKDIR /
+WORKDIR /app
 
-COPY . .
+COPY . ./
 
 RUN deno cache main.ts
 
