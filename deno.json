@@ -23,6 +23,7 @@
     "@utilities/": "./src/utilities/"
   },
   "tasks": {
-    "dev": "deno run -A --watch main.ts"
+    "dev": "deno run -A --watch main.ts",
+    "start": "deno run --allow-read --allow-net --allow-env main.ts"
   }
 }
