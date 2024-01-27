@@ -22,19 +22,33 @@ export class AIService {
 
   private store = new Map<string, OpenAI.Beta.Threads.Thread>();
 
-  public async conversation(customId: string, message: OpenAI.Beta.Threads.Messages.MessageCreateParams) {
-    if (!this.store.has(customId)) {
-      const thread = await this.provider.beta.threads.create();
-      this.store.set(customId, thread);
+  public hasThread(customId: string) {
+    return this.store.has(customId);
+  }
+
+  public async getOrCreateThread(customId: string) {
+    if (this.store.has(customId)) {
+      return this.store.get(customId);
     }
 
-    const thread = this.store.get(customId);
+    const thread = await this.provider.beta.threads.create();
+    this.store.set(customId, thread);
+    return thread;
+  }
+
+  public async sendMessageToThread(customId: string, message: OpenAI.Beta.Threads.Messages.MessageCreateParams) {
+    const thread = await this.getOrCreateThread(customId);
     if (!thread) return;
 
     await this.provider.beta.threads.messages.create(
       thread.id,
       message,
     );
+  }
+
+  public async getReplyToThread(customId: string) {
+    const thread = await this.getOrCreateThread(customId);
+    if (!thread) return;
 
     const run = await this.provider.beta.threads.runs.create(
       thread.id,

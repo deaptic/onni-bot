@@ -10,21 +10,34 @@ const allowedGuilds = ["614160132712038469", "552089273579470849"];
 export class MessageCreateEvent extends DiscordEvent<Events.MessageCreate> {
   public readonly data = new EventBuilder().setName(Events.MessageCreate);
 
-  private async handleAIConversation(message: Message) {
-    // Authorization
+  private async handleAIConversation(message: Message<true>) {
+    // Guard clauses
     if (!allowedGuilds.includes(message.guild?.id ?? "")) return;
     if (message.author.bot) return;
-    if (!message.mentions.has(this.client.user?.id ?? "")) return;
 
-    // AI is not available between 12am and 10am
-    const hour = new Date().getHours();
-    if (hour >= 0 && hour < 10) {
-      await message.reply({
-        content: "I'm sleeping right now. I'll be back at 10am.",
-        allowedMentions: {
-          repliedUser: true,
-        },
+    // Add message to AI thread
+    const addMessageToAIThread = async (threadId: string, content: string) => {
+      console.log(`Adding message to AI thread ${threadId}`, content);
+
+      await AI.sendMessageToThread(threadId, {
+        role: "user" as const,
+        content: content,
+      }).catch((error) => {
+        Logger.error(`Error while trying to continue thread`, error);
       });
+    };
+
+    // Message is not meant to be replied by AI
+    if (!message.mentions.has(this.client.user?.id ?? "")) {
+      // Add message to AI thread if it's text channel's thread and it exists in our store
+      if (message.channel.isThread(), message.channel.parent?.isTextBased()) {
+        const thread = AI.hasThread(message.channel.id);
+        if (thread) {
+          await addMessageToAIThread(message.channel.id, message.cleanContent);
+        }
+      }
+
+      // RETURN BEFORE IT'S TOO LATE
       return;
     }
 
@@ -34,15 +47,15 @@ export class MessageCreateEvent extends DiscordEvent<Events.MessageCreate> {
       autoArchiveDuration: 60,
     });
 
+    // Add message to AI conversation
+    await addMessageToAIThread(thread.id, message.cleanContent);
+
     // Start typing indicator
     startTyping(message);
 
     // Start conversation
-    const response = await AI.conversation(thread.id, {
-      role: "user" as const,
-      content: message.content,
-    }).catch((error) => {
-      Logger.error(`Error while trying to continue conversation`, error);
+    const response = await AI.getReplyToThread(thread.id).catch((error) => {
+      Logger.error(`Error while trying to reply to a thread`, error);
     });
 
     // Stop typing indicator
