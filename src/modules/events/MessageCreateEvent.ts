@@ -58,7 +58,7 @@ export class MessageCreateEvent extends DiscordEvent<Events.MessageCreate> {
     await addMessageToAIThread(thread.id, message.cleanContent);
 
     // Start typing indicator
-    startTyping(message);
+    startTyping(thread);
 
     // Start conversation
     const response = await AI.getReplyToThread(thread.id).catch((error) => {
@@ -66,7 +66,7 @@ export class MessageCreateEvent extends DiscordEvent<Events.MessageCreate> {
     });
 
     // Stop typing indicator
-    clearTyping(message);
+    clearTyping(thread);
 
     // No response from AI
     if (!response) {
