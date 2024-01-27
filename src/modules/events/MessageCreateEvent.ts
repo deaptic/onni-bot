@@ -17,11 +17,16 @@ export class MessageCreateEvent extends DiscordEvent<Events.MessageCreate> {
 
     // Add message to AI thread
     const addMessageToAIThread = async (threadId: string, content: string) => {
-      console.log(`Adding message to AI thread ${threadId}`, content);
+      const username = message.author.username
+        .replace(/\s+/g, "_")
+        .replace(/[^\w\s]/gi, "");
 
       await AI.sendMessageToThread(threadId, {
         role: "user" as const,
         content: content,
+        metadata: {
+          user: username,
+        },
       }).catch((error) => {
         Logger.error(`Error while trying to continue thread`, error);
       });
@@ -29,8 +34,8 @@ export class MessageCreateEvent extends DiscordEvent<Events.MessageCreate> {
 
     // Message is not meant to be replied by AI
     if (!message.mentions.has(this.client.user?.id ?? "")) {
-      // Add message to AI thread if it's text channel's thread and it exists in our store
-      if (message.channel.isThread(), message.channel.parent?.isTextBased()) {
+      // Add message to AI thread if it's discord's thread and it exists in our store
+      if (message.channel.isThread()) {
         const thread = AI.hasThread(message.channel.id);
         if (thread) {
           await addMessageToAIThread(message.channel.id, message.cleanContent);
@@ -42,10 +47,12 @@ export class MessageCreateEvent extends DiscordEvent<Events.MessageCreate> {
     }
 
     // Get or create thread
-    const thread = message.channel.isThread() ? message.channel : await message.startThread({
-      name: message.cleanContent,
-      autoArchiveDuration: 60,
-    });
+    const thread = (message.channel.isThread() || message.channel.isVoiceBased())
+      ? message.channel
+      : await message.startThread({
+        name: message.cleanContent,
+        autoArchiveDuration: 60,
+      });
 
     // Add message to AI conversation
     await addMessageToAIThread(thread.id, message.cleanContent);
@@ -92,6 +99,8 @@ export class MessageCreateEvent extends DiscordEvent<Events.MessageCreate> {
   }
 
   public async execute(message: Message) {
-    await this.handleAIConversation(message);
+    if (message.guild) {
+      await this.handleAIConversation(message as Message<true>);
+    }
   }
 }

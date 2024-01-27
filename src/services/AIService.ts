@@ -1,6 +1,7 @@
 import { OpenAI } from "openai";
 import { getOpenAiApiToken } from "@constants/environments.ts";
 import { MessageContentText } from "openai/resources";
+import { Logger } from "@services/LoggerService.ts";
 
 export class AIService {
   private static instance: AIService | undefined;
@@ -64,6 +65,17 @@ export class AIService {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       runStatus = await this.provider.beta.threads.runs.retrieve(thread.id, run.id);
     }
+
+    if ((runStatus.usage?.total_tokens || 1000) >= 1000) {
+      Logger.warn(`OpenAI API usage exceeded 1000 tokens.`, runStatus.usage);
+      const threadId = this.store.get(customId)?.id;
+      if (threadId) {
+        await this.provider.beta.threads.del(threadId);
+        this.store.delete(customId);
+      }
+    }
+
+    Logger.info(`OpenAI API usage: ${runStatus.usage?.total_tokens || 0} tokens.`);
 
     const messages = await this.provider.beta.threads.messages.list(thread.id);
 
