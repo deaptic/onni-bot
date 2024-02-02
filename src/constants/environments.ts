@@ -20,6 +20,10 @@ export const getOpenAiApiToken = () => {
   return getVariableByKey("OPENAI_API_TOKEN");
 };
 
+export const getOpenAiCustomModelId = () => {
+  return getVariableByKey("OPENAI_CUSTOM_MODEL_ID");
+};
+
 export const getRedisHost = () => {
   return getVariableByKey("REDIS_HOST");
 };

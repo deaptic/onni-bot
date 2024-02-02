@@ -1,5 +1,5 @@
 import { OpenAI } from "openai";
-import { getOpenAiApiToken } from "@constants/environments.ts";
+import { getOpenAiApiToken, getOpenAiCustomModelId } from "@constants/environments.ts";
 import { MessageContentText } from "openai/resources";
 import { Logger } from "@services/LoggerService.ts";
 
@@ -53,7 +53,7 @@ export class AIService {
 
     const run = await this.provider.beta.threads.runs.create(
       thread.id,
-      { assistant_id: "asst_l1kW87QO3qi6Xt3DMiHG0qBA" },
+      { assistant_id: getOpenAiCustomModelId() },
     );
 
     let runStatus = await this.provider.beta.threads.runs.retrieve(
