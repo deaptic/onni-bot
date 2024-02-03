@@ -1,14 +1,15 @@
 import { Collection } from "discord.js";
-import { BaseInteraction, DiscordInteraction } from "@modules/interactions/DiscordInteraction.ts";
-import * as interactions from "@modules/interactions/index.ts";
-import { Onni } from "@/Client.ts";
+import { BaseCommand } from "@modules/commands/BaseCommand.ts";
+import * as interactions from "@modules/commands/index.ts";
+import { Bot } from "@/Client.ts";
 import { Logger } from "@services/LoggerService.ts";
+import { CommandInteraction } from "discord.js";
 
-export class InteractionManager extends Collection<
+export class CommandHandler extends Collection<
   string,
-  DiscordInteraction<BaseInteraction>
+  BaseCommand<CommandInteraction>
 > {
-  constructor(private readonly client: Onni) {
+  constructor(private readonly client: Bot) {
     super();
     this.collect()
       .deploy([...this.values()])
@@ -30,7 +31,7 @@ export class InteractionManager extends Collection<
   }
 
   private async deploy(
-    interactionInstances: DiscordInteraction<BaseInteraction>[],
+    interactionInstances: BaseCommand<CommandInteraction>[],
   ) {
     const data = interactionInstances.map((instance) => instance.data);
 

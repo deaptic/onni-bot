@@ -1,10 +1,11 @@
 import { Collection } from "discord.js";
-import { BaseEvent, DiscordEvent } from "@modules/events/DiscordEvent.ts";
+import { BaseEvent } from "@modules/events/BaseEvent.ts";
 import * as events from "@modules/events/index.ts";
-import { Onni } from "@/Client.ts";
+import { Bot } from "@/Client.ts";
+import { ClientEvents } from "discord.js";
 
-export class EventManager extends Collection<string, DiscordEvent<BaseEvent>> {
-  constructor(private readonly client: Onni) {
+export class EventHandler extends Collection<string, BaseEvent<keyof ClientEvents>> {
+  constructor(private readonly client: Bot) {
     super();
     this.collect().deploy([...this.values()]);
   }
@@ -23,13 +24,13 @@ export class EventManager extends Collection<string, DiscordEvent<BaseEvent>> {
     return this;
   }
 
-  private deploy(eventInstances: DiscordEvent<BaseEvent>[]) {
+  private deploy(eventInstances: BaseEvent<keyof ClientEvents>[]) {
     for (const instance of eventInstances) {
       if (!instance.data.name) {
         continue;
       }
 
-      if (instance.data.runOnce) {
+      if (instance.data.once) {
         this.client.once(instance.data.name, instance.execute.bind(instance));
         continue;
       }

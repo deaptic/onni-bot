@@ -1,10 +1,10 @@
 import { Client, GatewayIntentBits } from "discord.js";
-import { EventManager } from "@managers/EventManager.ts";
-import { InteractionManager } from "@managers/InteractionManager.ts";
+import { EventHandler } from "@/handlers/EventHandler.ts";
+import { CommandHandler } from "@/handlers/CommandHandler.ts";
 
-export class Onni extends Client {
-  public readonly events = new EventManager(this);
-  public readonly interactions = new InteractionManager(this);
+export class Bot extends Client {
+  public readonly events = new EventHandler(this);
+  public readonly commands = new CommandHandler(this);
 
   constructor() {
     super({
