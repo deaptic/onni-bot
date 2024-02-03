@@ -1,53 +1,38 @@
 import { ChatInputCommandInteraction, CommandInteraction, Events, Interaction } from "discord.js";
-import { EventBuilder } from "@builders/EventBuilder.ts";
-import { DiscordEvent } from "@modules/events/DiscordEvent.ts";
-import { DiscordInteraction } from "@modules/interactions/DiscordInteraction.ts";
+import { BaseEvent } from "@modules/events/BaseEvent.ts";
+import { BaseCommand } from "@modules/commands/BaseCommand.ts";
 import { Logger } from "@services/LoggerService.ts";
 
-export class InteractionCreateEvent extends DiscordEvent<Events.InteractionCreate> {
-  public readonly data = new EventBuilder().setName(Events.InteractionCreate);
+export class InteractionCreateEvent extends BaseEvent<Events.InteractionCreate> {
+  public readonly data = {
+    name: Events.InteractionCreate,
+  } as const;
 
   public execute(interaction: Interaction) {
     return this.handleInteraction(interaction);
   }
 
-  // Interaction
   private handleInteraction(interaction: Interaction) {
     if (interaction.isCommand()) {
-      return this.handleCommandInteraction(interaction);
+      this.handleCommandInteraction(interaction);
     }
   }
 
-  // CommandInteraction
   private handleCommandInteraction(interaction: CommandInteraction) {
-    const module = this.client.interactions.get(interaction.commandName);
-    if (!module) return;
+    const command = this.client.commands.get(interaction.commandName);
+    if (!command) return;
 
     if (interaction.isChatInputCommand()) {
-      return this.handleChatInputCommandInteraction(interaction, module)
-        .then(() => {
-          Logger.log(
-            `Interaction ${interaction.commandName} executed by ${interaction.user.tag} (${interaction.user.id})`,
-          );
-        })
-        .catch((error) => {
-          const newErrorMessage =
-            `Error while trying to execute interaction ${interaction.commandName} by ${interaction.user.tag} (${interaction.user.id})`;
-          Logger.error(error.message || newErrorMessage, error);
-
-          interaction.reply({
-            content: `Error while trying to execute interaction ${interaction.commandName}`,
-            ephemeral: true,
-          });
-        });
+      this.handleChatInputCommandInteraction(interaction, command);
     }
   }
 
-  // ChatInputCommandInteraction
   private async handleChatInputCommandInteraction(
     interaction: ChatInputCommandInteraction,
-    module: DiscordInteraction<ChatInputCommandInteraction>,
+    command: BaseCommand<ChatInputCommandInteraction>,
   ) {
-    return await module.execute(interaction);
+    await command.execute(interaction)?.catch((error) => {
+      Logger.error(`Error while trying to execute ChatInputCommand: ${interaction.commandName}`, error);
+    });
   }
 }
