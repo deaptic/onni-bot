@@ -4,104 +4,83 @@ import { AI } from "@services/AIService.ts";
 import { Logger } from "@services/LoggerService.ts";
 import { clearTyping, startTyping } from "@utilities/message.ts";
 
-const allowedGuilds = ["614160132712038469", "552089273579470849"];
-
 export class MessageCreateEvent extends BaseEvent<Events.MessageCreate> {
   public readonly data = {
     name: Events.MessageCreate,
   } as const;
 
   private async handleAIConversation(message: Message<true>) {
-    // Guard clauses
-    if (!allowedGuilds.includes(message.guild?.id ?? "")) return;
+    // Bot cannot reply to itself
     if (message.author.bot) return;
 
-    // Add message to AI thread
-    const addMessageToAIThread = async (threadId: string, content: string) => {
-      const username = message.author.username
-        .replace(/\s+/g, "_")
-        .replace(/[^\w\s]/gi, "");
-
-      await AI.sendMessageToThread(threadId, {
-        role: "user" as const,
-        content: content,
-        metadata: {
-          user: username,
-        },
-      }).catch((error) => {
-        Logger.error(`Error while trying to continue thread`, error);
-      });
-    };
-
-    // Message is not meant to be replied by AI
+    // We don't want to reply to messages that don't mention the bot
     if (!message.mentions.has(this.client.user?.id ?? "")) {
-      // Add message to AI thread if it's discord's thread and it exists in our store
-      if (message.channel.isThread()) {
-        const thread = AI.hasThread(message.channel.id);
-        if (thread) {
-          await addMessageToAIThread(message.channel.id, message.cleanContent);
-        }
+      // Check if the message is a thread and creator of the thread is the bot itself
+      if (message.channel.isThread() && message.channel.author?.id === this.client.user?.id) {
+        // Add message to AI's thread
+        await AI.sendMessageToThread(message.channel.id, {
+          role: "user" as const,
+          content: message.cleanContent,
+        });
       }
 
-      // RETURN BEFORE IT'S TOO LATE
+      // We don't want to continue any further
       return;
     }
 
-    // Get or create thread
-    const thread = (message.channel.isThread() || message.channel.isVoiceBased())
+    // Get current thread or make a new one if necessary
+    const channel = (message.channel.isThread() || message.channel.isVoiceBased())
       ? message.channel
       : await message.startThread({
-        name: message.cleanContent,
+        name: message.cleanContent.substring(0, 100),
         autoArchiveDuration: 60,
-      });
+      }) || message.channel;
 
-    // Add message to AI conversation
-    await addMessageToAIThread(thread.id, message.cleanContent);
-
-    // Start typing indicator
-    startTyping(thread);
-
-    // Start conversation
-    const response = await AI.getReplyToThread(thread.id).catch((error) => {
-      Logger.error(`Error while trying to reply to a thread`, error);
+    // Add message to AI's thread
+    await AI.sendMessageToThread(channel.id, {
+      role: "user" as const,
+      content: message.cleanContent,
     });
 
-    // Stop typing indicator
-    clearTyping(thread);
+    // Start typing indicator on the channel
+    startTyping(channel);
 
-    // No response from AI
-    if (!response) {
-      await message.reply({
-        content: "I'm sorry, I couldn't understand that.",
-        allowedMentions: {
-          repliedUser: true,
-        },
-      });
-      return;
-    }
+    // Get AI's response to the current thread
+    const response = await AI.getReplyToThread(channel.id);
 
-    // AI response
+    // Stop typing indicator on the channel
+    clearTyping(channel);
+
+    // Chunk the response into 2000 characters each
     const chunks = response?.match(/(.|[\r\n]){1,2000}/g);
 
+    // Send all the message chunks to the channel one by one
     for (const chunk of chunks ?? []) {
+      const content = chunk || "I'm sorry, I couldn't understand that.";
+
+      // If the message is a thread, reply to the message
       if (message.channel.isThread()) {
         await message.reply({
-          content: chunk,
+          content,
           allowedMentions: {
             repliedUser: true,
           },
         });
         continue;
       }
-      await thread.send({
-        content: chunk,
+
+      // If the message is a voice based channel, send the message to the channel
+      await channel.send({
+        content,
       });
     }
   }
 
   public async execute(message: Message) {
     if (message.guild) {
-      await this.handleAIConversation(message as Message<true>);
+      await this.handleAIConversation(message as Message<true>).catch((error) => {
+        Logger.error(`Error while trying to handle AI conversation`, error);
+      });
     }
   }
 }
