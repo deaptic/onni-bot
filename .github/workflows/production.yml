@@ -45,8 +45,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/onni-bot:latest
             docker stop onni-bot || true
             docker rm onni-bot || true
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/onni-bot:latest
             docker run -d -p 80:80 --name onni-bot ${{ secrets.DOCKERHUB_USERNAME }}/onni-bot:latest
             docker logout
