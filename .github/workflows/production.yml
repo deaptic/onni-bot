@@ -49,6 +49,7 @@ jobs:
             docker rm onni-bot || true
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/onni-bot:latest
             docker run -d -p 80:80 --name onni-bot \
+              -e NODE_ENV=production \
               -e DISCORD_API_TOKEN=${{ secrets.DISCORD_API_TOKEN }} \
               -e OPENAI_API_TOKEN=${{ secrets.OPENAI_API_TOKEN }} \
               -e OPENAI_CUSTOM_MODEL_ID=${{ secrets.OPENAI_CUSTOM_MODEL_ID }} \
