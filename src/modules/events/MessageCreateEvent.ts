@@ -15,8 +15,8 @@ export class MessageCreateEvent extends BaseEvent<Events.MessageCreate> {
 
     // We don't want to reply to messages that don't mention the bot
     if (!message.mentions.has(this.client.user?.id ?? "")) {
-      // Check if the message is a thread and creator of the thread is the bot itself
-      if (message.channel.isThread() && message.channel.author?.id === this.client.user?.id) {
+      // Check if the message is a thread
+      if (message.channel.isThread()) {
         // Add message to AI's thread
         await AI.sendMessageToThread(message.channel.id, {
           role: "user" as const,
@@ -46,10 +46,14 @@ export class MessageCreateEvent extends BaseEvent<Events.MessageCreate> {
     startTyping(channel);
 
     // Get AI's response to the current thread
-    const response = await AI.getReplyToThread(channel.id);
-
-    // Stop typing indicator on the channel
-    clearTyping(channel);
+    const response = await AI.getReplyToThread(channel.id)
+      .catch((error) => {
+        Logger.error(`Error while trying to get AI's response to the current thread`, error);
+      })
+      .finally(() => {
+        // Stop typing indicator on the channel
+        clearTyping(channel);
+      });
 
     // Chunk the response into 2000 characters each
     const chunks = response?.match(/(.|[\r\n]){1,2000}/g);

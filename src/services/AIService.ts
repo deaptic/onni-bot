@@ -69,7 +69,7 @@ export class AIService {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       runStatus = await this.provider.beta.threads.runs.retrieve(thread.id, run.id);
 
-      if (runStatus.status === "cancelled" || runStatus.status === "failed" || runStatus.status === "expired") {
+      if (["cancelled", "failed", "expired", "cancelling", "requires_action"].includes(runStatus.status)) {
         throw new Error("Run failed");
       }
     }
