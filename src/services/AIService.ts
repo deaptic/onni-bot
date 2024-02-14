@@ -65,10 +65,13 @@ export class AIService {
     );
 
     // Wait for the run to complete
-    // TODO: This needs to be refactored to be robust and handle cases if run never completes
     while (runStatus.status !== "completed") {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       runStatus = await this.provider.beta.threads.runs.retrieve(thread.id, run.id);
+
+      if (runStatus.status === "cancelled" || runStatus.status === "failed" || runStatus.status === "expired") {
+        throw new Error("Run failed");
+      }
     }
 
     // Get all messages from the thread
@@ -77,7 +80,7 @@ export class AIService {
     // Get the response from the thread
     const response = (messages.data
       .filter((message) => message.run_id === run.id)
-      .pop().content[0] as MessageContentText).text.value;
+      .pop()?.content[0] as MessageContentText).text.value;
 
     // Log the usage of the API
     Logger.info(`OpenAI API usage: ${runStatus.usage?.total_tokens || 0} tokens.`);
